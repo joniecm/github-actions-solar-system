@@ -38,6 +38,28 @@ jobs:
             name: Mocha-Test-Result
             path: test-results.xml
 
+    code-coverate:
+      name: Code Coverage
+      runs-on: ubuntu
+      steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup NodeJS Version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run Code Coverage
+        run: npm run code-coverage
+        continue-on-error: true
+
+      - name: Archive Code Coverage Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: Code-Coverage-Result
+          path: coverage
+          retention-days: 5
 
 # 1) Create a new branch from the main and name it feature/workflow and switch to it
 
@@ -51,3 +73,17 @@ jobs:
 
 # Currently, the Archive test reports step only run when the previous step are successfully completed.
 # Modify the step to execute even when any of the previous steps result in failure.
+
+# Append a new job with id as code-coverage,
+# a. This job should execute on this operating system - ubuntu-latest
+# b. Add following steps
+# Step 1 - use an action to checkout the repository
+# Step 2 - use actions/setup-node action to setup NodeJS of version 18
+# Step 3 - Install NodeJS dependencies
+# Step 4 - Run Code-coverage command (npm run code-coverage)
+# This step may fail, configure the step to prevent the job from failing when this step fails.
+# Step 5 - Upload code-coverage reports using upload-artifact action with the below
+# config
+# - name: Code-Coverage-Result
+# - path: coverage
+# - retention-days: 5
