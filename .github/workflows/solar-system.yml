@@ -6,7 +6,12 @@ on:
     branches:
       - main
       - 'feature/*'
-    
+
+env:
+  MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+  MONGO_USERNAME: superuser
+  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+
 jobs:
     unit-testing:
         name: Unit Testing
@@ -31,3 +36,14 @@ jobs:
           with:
             name: Mocha-Test-Result
             path: test-results.xml
+
+
+# 1) Create a new branch from the main and name it feature/workflow and switch to it
+
+# A workflow should be triggered. Check that it fails in the unit testing step.
+# 2) Work on the feature/workflow branch, add the following environment variables at the workflow level:
+# MONGO_URI: ‘mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+# MONGO_USERNAME: superuser
+# MONGO_PASSWORD: SuperPassword
+# For MONGO_PASSWORD, add it as a Repository Secret and refer it in the workflow environment variables
+# 3) Trigger the workflow and check that it runs successfully
