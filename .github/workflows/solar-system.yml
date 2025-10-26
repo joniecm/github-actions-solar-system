@@ -32,6 +32,7 @@ jobs:
           run: npm test
           
         - name: Archive Test Result
+          if: always()
           uses: actions/upload-artifact@v4
           with:
             name: Mocha-Test-Result
@@ -47,3 +48,6 @@ jobs:
 # MONGO_PASSWORD: SuperPassword
 # For MONGO_PASSWORD, add it as a Repository Secret and refer it in the workflow environment variables
 # 3) Trigger the workflow and check that it runs successfully
+
+# Currently, the Archive test reports step only run when the previous step are successfully completed.
+# Modify the step to execute even when any of the previous steps result in failure.
