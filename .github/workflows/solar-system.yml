@@ -51,7 +51,7 @@ jobs:
           node-version: 18
 
       - name: Run Code Coverage
-        run: npm run code-coverage
+        run: npm run coverage
         continue-on-error: true
 
       - name: Archive Code Coverage Result
