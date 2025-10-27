@@ -50,6 +50,12 @@ jobs:
         with:
           node-version: 18
 
+      - name: Cache NPM dependencies
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          path: ~/.npm
+
       - name: Install Dependencies
         run: npm install
 
@@ -64,29 +70,10 @@ jobs:
           path: coverage
           retention-days: 5
 
-# 1) Create a new branch from the main and name it feature/workflow and switch to it
-
-# A workflow should be triggered. Check that it fails in the unit testing step.
-# 2) Work on the feature/workflow branch, add the following environment variables at the workflow level:
-# MONGO_URI: ‘mongodb+srv://supercluster.d83jj.mongodb.net/superData'
-# MONGO_USERNAME: superuser
-# MONGO_PASSWORD: SuperPassword
-# For MONGO_PASSWORD, add it as a Repository Secret and refer it in the workflow environment variables
-# 3) Trigger the workflow and check that it runs successfully
-
-# Currently, the Archive test reports step only run when the previous step are successfully completed.
-# Modify the step to execute even when any of the previous steps result in failure.
-
-# Append a new job with id as code-coverage,
-# a. This job should execute on this operating system - ubuntu-latest
-# b. Add following steps
-# Step 1 - use an action to checkout the repository
-# Step 2 - use actions/setup-node action to setup NodeJS of version 18
-# Step 3 - Install NodeJS dependencies
-# Step 4 - Run Code-coverage command (npm run code-coverage)
-# This step may fail, configure the step to prevent the job from failing when this step fails.
-# Step 5 - Upload code-coverage reports using upload-artifact action with the below
-# config
-# - name: Code-Coverage-Result
-# - path: coverage
-# - retention-days: 5
+# Work on the existing unit-testing job,
+# a. Add a step named Cache NPM dependencies before Install Dependencies step
+# b. This new step should cache npm dependencies using the latest version of the actions/cache action
+# Cache key should be based on the runner OS and the hash of package-lock.json file
+# key: {runnerOS}-node-{hash}
+# Replace with appropriate variable and functions.
+# path: ~/.npm
