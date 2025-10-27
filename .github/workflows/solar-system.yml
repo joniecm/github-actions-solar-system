@@ -70,6 +70,28 @@ jobs:
           path: coverage
           retention-days: 5
 
+    docker:
+      runs-on: ubuntu-latest
+      needs: [unit-testing, code-coverage]
+      steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.actor }}/solar-system:${{ github.sha }}
+
+        
 # Work on the existing unit-testing job,
 # a. Add a step named Cache NPM dependencies before Install Dependencies step
 # b. This new step should cache npm dependencies using the latest version of the actions/cache action
@@ -77,3 +99,17 @@ jobs:
 # key: {runnerOS}-node-{hash}
 # Replace with appropriate variable and functions.
 # path: ~/.npm
+
+# Append a new job with id as docker,
+# a. This job should execute on this operating system - ubuntu-latest
+# b. This job should run after unit-testing and code-coverage jobs.
+# c. Add following steps:
+# Step 1 - use an action to checkout the repository
+# Step 2 - use a docker/login-action action to login into Github Container Registry with the below config
+# Registry: ghcr.io
+# Username: your Github Account Username
+# Password: GITHUB_TOKEN
+# Step 3 - use a docker/build-push-action to build and push the image to Github Container Registry
+# For image version use GitHub commit sha
+# The image tag should be in the format of ghcr.io/{githubUsername}/solar-system:{githubSHA}
+# d. Commit the changes and checkout the workflow execution
