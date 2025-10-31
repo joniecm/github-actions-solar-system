@@ -6,9 +6,6 @@ on:
         description: Provide the Ingress URL
         required: true
         type: string
-    secrets:
-      personal_access_token:
-        required: true
 
 jobs:
   integration-test:
